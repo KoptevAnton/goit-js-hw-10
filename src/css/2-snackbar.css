@@ -1,0 +1,17 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 300px;
+}
+
+label:first-child {
+  display: flex;
+  flex-direction: column;
+}
+
+fieldset {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
