@@ -1,11 +1,20 @@
-// Описаний у документації
+// Імпорт бібліотеки iziToast для відображення сповіщень
 import iziToast from 'izitoast';
-// Додатковий імпорт стилів
+// Імпорт стилів для iziToast
 import 'izitoast/dist/css/iziToast.min.css';
 
-// Створимо функцію, що додає затримку
-const delayPromise = delay =>
-  new Promise(resolve => setTimeout(resolve, delay));
+// Створимо функцію, що додає затримку і вирішує або відхиляє проміс
+const createPromise = (delay, state) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (state === 'fulfilled') {
+        resolve(delay);
+      } else {
+        reject(delay);
+      }
+    }, delay);
+  });
+};
 
 // Створимо об'єкт посилань на елементи форми
 const elements = {
@@ -14,6 +23,7 @@ const elements = {
   stateInputs: document.querySelectorAll('input[name="state"]'),
 };
 
+// Деструктуризація об'єкта elements
 const { form, delayInput, stateInputs } = elements;
 
 // Функція для отримання обраного стану
@@ -37,17 +47,17 @@ form.addEventListener('submit', event => {
     return;
   }
 
-  delayPromise(delay).then(() => {
-    if (state === 'fulfilled') {
+  createPromise(delay, state)
+    .then((resolvedDelay) => {
       iziToast.success({
         title: 'Success',
-        message: `✅ Fulfilled promise in ${delay}ms`,
+        message: `✅ Fulfilled promise in ${resolvedDelay}ms`,
       });
-    } else {
+    })
+    .catch((rejectedDelay) => {
       iziToast.error({
         title: 'Error',
-        message: `❌ Rejected promise in ${delay}ms`,
+        message: `❌ Rejected promise in ${rejectedDelay}ms`,
       });
-    }
-  });
+    });
 });
